@@ -1,7 +1,11 @@
-import React from 'react'
+'use client'
+
+import React, { useEffect } from 'react'
 
 const page = () => {
-  throw new Error('Deliberate error on about page for testing error boundary!')
+  useEffect(() => {
+    throw new Error('Deliberate error on about page for testing error boundary!')
+  }, [])
   
   return (
     <div>
