@@ -4,7 +4,7 @@ BACKEND-NEXT.JS, SUPABASE
 
 ### Main Routes
 - `/` - Home page
-- `/about` - About page
+- `/about` - About page - delibratee error
 - `/blogs` - All blog posts
 - `/blog/[slug]` - Individual blog post - it produces this route because each blog has different slug, so dyanmic routes help to creating the routes manually for each blog.
 - `/blogs/archive` - List of years - it is a simple nested route
