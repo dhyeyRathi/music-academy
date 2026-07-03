@@ -1,0 +1,112 @@
+[
+  {
+    "id": 1,
+    "title": "Mastering Tailwind CSS for Modern UI",
+    "slug": "mastering-tailwind-css",
+    "excerpt": "Learn how Tailwind CSS helps build fast, scalable, and beautiful interfaces.",
+    "author": "John Carter",
+    "publishedAt": "2026-06-12",
+    "category": "Frontend",
+    "readTime": "6 min",
+    "thumbnail": "https://images.unsplash.com/photo-1498050108023-c5249f4df085"
+  },
+  {
+    "id": 2,
+    "title": "Next.js Server Components Explained",
+    "slug": "nextjs-server-components",
+    "excerpt": "A beginner-friendly guide to understanding server and client components in Next.js.",
+    "author": "Sarah Lee",
+    "publishedAt": "2026-05-20",
+    "category": "Next.js",
+    "readTime": "8 min",
+    "thumbnail": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3"
+  },
+  {
+    "id": 3,
+    "title": "JavaScript Closures Made Simple",
+    "slug": "javascript-closures",
+    "excerpt": "Closures sound scary until they don’t. Here’s the easiest explanation.",
+    "author": "Alex Morgan",
+    "publishedAt": "2026-04-10",
+    "category": "JavaScript",
+    "readTime": "5 min",
+    "thumbnail": "https://images.unsplash.com/photo-1461749280684-dccba630e2f6"
+  },
+  {
+    "id": 4,
+    "title": "Building Accessible Web Apps",
+    "slug": "accessible-web-apps",
+    "excerpt": "Accessibility isn’t optional. Learn practical techniques to improve UX for everyone.",
+    "author": "Emma Wilson",
+    "publishedAt": "2026-03-18",
+    "category": "Accessibility",
+    "readTime": "7 min",
+    "thumbnail": "https://images.unsplash.com/photo-1515879218367-8466d910aaa4"
+  },
+  {
+    "id": 5,
+    "title": "The Power of TypeScript in Large Projects",
+    "slug": "typescript-large-projects",
+    "excerpt": "Why TypeScript becomes your best friend as your codebase grows.",
+    "author": "Michael Brown",
+    "publishedAt": "2026-02-22",
+    "category": "TypeScript",
+    "readTime": "9 min",
+    "thumbnail": "https://images.unsplash.com/photo-1504639725590-34d0984388bd"
+  },
+  {
+    "id": 6,
+    "title": "Optimizing React Performance",
+    "slug": "optimizing-react-performance",
+    "excerpt": "Reduce re-renders and improve performance using practical optimization strategies.",
+    "author": "Olivia Green",
+    "publishedAt": "2026-01-30",
+    "category": "React",
+    "readTime": "10 min",
+    "thumbnail": "https://images.unsplash.com/photo-1484417894907-623942c8ee29"
+  },
+  {
+    "id": 7,
+    "title": "Understanding APIs for Beginners",
+    "slug": "understanding-apis",
+    "excerpt": "What APIs are, how they work, and why every developer should understand them.",
+    "author": "Daniel White",
+    "publishedAt": "2025-12-15",
+    "category": "Backend",
+    "readTime": "4 min",
+    "thumbnail": "https://images.unsplash.com/photo-1555066931-4365d14bab8c"
+  },
+  {
+    "id": 8,
+    "title": "CSS Tricks That Feel Illegal",
+    "slug": "css-tricks-illegal",
+    "excerpt": "A collection of CSS techniques so good they feel like cheating.",
+    "author": "Sophia Adams",
+    "publishedAt": "2025-11-05",
+    "category": "CSS",
+    "readTime": "6 min",
+    "thumbnail": "https://images.unsplash.com/photo-1499951360447-b19be8fe80f5"
+  },
+  {
+    "id": 9,
+    "title": "State Management in React",
+    "slug": "state-management-react",
+    "excerpt": "Redux, Zustand, Context—when to use what and why.",
+    "author": "Chris Taylor",
+    "publishedAt": "2025-10-28",
+    "category": "React",
+    "readTime": "8 min",
+    "thumbnail": "https://images.unsplash.com/photo-1517180102446-f3ece451e9d8"
+  },
+  {
+    "id": 10,
+    "title": "Deploying Next.js Apps Like a Pro",
+    "slug": "deploying-nextjs-apps",
+    "excerpt": "Deployment strategies, performance tips, and production best practices.",
+    "author": "Liam Scott",
+    "publishedAt": "2025-09-14",
+    "category": "Deployment",
+    "readTime": "7 min",
+    "thumbnail": "https://images.unsplash.com/photo-1451187580459-43490279c0fa"
+  }
+]

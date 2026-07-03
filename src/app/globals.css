@@ -1,26 +1,80 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-blue-950: #172554;
+  --color-blue-900: #152554;
+  --color-night : color-mix(in srgb, var(--color-blue-950), black 60%);
+  --color-neon-lime: #39ff14;
+  --color-neon-pink: #ff007f;
+  --color-neon-cyan: #005050;
+  --color-neon-blue:  #00d4ff;
+  --color-neon-blue-t: #00d4ff4D;
+  --animate-clock-it: border-rotate 60s linear infinite;
+
+  @keyframes border-rotate {
+    from {
+      --angle: 0deg;
+    }
+    to {
+      --angle: 360deg;
+    }
+  }
+ 
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+
+@utility bg-border-gradient {
+  background: conic-gradient(
+   
+  from 0deg,
+  var(--color-neon-blue) 0deg,
+  var(--color-neon-pink) 120deg,
+  var(--color-neon-blue) 200deg,
+  var(--color-neon-pink) 260deg,
+  var(--color-neon-blue) 360deg
+
+  );
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@utility bg-flare-gradient {
+  background: conic-gradient(
+   
+  from var(--angle),
+  var(--color-night) 0deg,
+  var(--color-night) 300deg,
+  var(--color-neon-blue-t) 310deg,
+  var(--color-night) 360deg
+
+  );
+}
+
+
+@theme {
+  /* This exposes the utility class 'animate-border-slide' */
+  --animate-border-slide: border-slide 2s linear infinite;
+
+  @keyframes border-slide {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+
+@utility text-glow {
+  text-shadow: 0 0 50px #ff007f;
+  color: var(--color-neon-pink);
+
 }
+
+
