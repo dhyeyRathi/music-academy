@@ -1,17 +1,18 @@
 FRONTEND- NEXT.JS, LUCIDE
+
 BACKEND-NEXT.JS, SUPABASE
 
 ### Main Routes
 - `/` - Home page
 - `/about` - About page
 - `/blogs` - All blog posts
-- `/blog/[slug]` - Individual blog post
-- `/blogs/archive` - List of years
-- `/blogs/archive/[year]` - Posts from that year
-- `/blogs/archive/[year]/[slug]` - Specific post from that year
-- `/api/upload-image` - Upload images
-- `/api/uploadtodb` - Upload to database
-- `/studio/[[...tool]]` - Sanity CMS
+- `/blog/[slug]` - Individual blog post - it produces this route because each blog has different slug, so dyanmic routes help to creating the routes manually for each blog.
+- `/blogs/archive` - List of years - it is a simple nested route
+- `/blogs/archive/[year]` - Posts from that year - it passes the year dynamically to sort blogs year wise.
+- `/blogs/archive/[year]/[slug]` - Specific post from that year - post from the specific year, nested dynamic
+- `/api/upload-image` - Upload images - api to uplaod image on sanity
+- `/api/uploadtodb` - Upload to database - api to upload data to db
+- `/studio/[[...tool]]` - Sanity CMS - to store and fetch images as cdn so fetching is faster than local sotrage.
 
 ### Why This Structure?
 
