@@ -12,7 +12,9 @@ const NavBar = ({ className }: { className: string }) => {
   ];
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-[#E8E2D5] bg-[#FAF7F2]/80 backdrop-blur-md transition-all duration-300">
+    <header
+      className="sticky top-0 z-50 w-full border-b border-[#E8E2D5] bg-[#FAF7F2] backdrop-blur-md transition-all duration-300"
+    >
       <div className="max-w-7xl mx-auto px-6 sm:px-8 h-20 flex justify-between items-center">
         {/* Brand Logo */}
         <Link href="/" className="text-2xl font-bold tracking-tight text-[#1C1917] hover:text-[#B89A6C] transition-colors duration-300">
@@ -61,8 +63,10 @@ const NavBar = ({ className }: { className: string }) => {
 
       {/* Mobile Drawer Overlay */}
       {ham && (
-        <div className="fixed inset-0 z-50 bg-[#FAF7F2]/98 flex flex-col p-6 animate-fade-in md:hidden">
-          <div className="flex justify-between items-center h-20 px-2">
+        <div
+          className="fixed inset-0 z-[99] flex flex-col p-6 bg-[#FAF7F2] md:hidden"
+        >
+          <div className="flex justify-between items-center bg-[#FAF7F2] h-20 px-2">
             <Link href="/" className="text-2xl font-bold tracking-tight text-[#1C1917]" onClick={() => setHam(false)}>
               Blog <span className="font-light text-[#B89A6C]">App</span>
             </Link>
@@ -88,7 +92,7 @@ const NavBar = ({ className }: { className: string }) => {
             </button>
           </div>
 
-          <div className="flex-1 flex flex-col justify-center items-center gap-8 pb-20">
+          <div className="flex-1 flex flex-col justify-center items-center bg-[#FAF7F2] border-b-2 mt-10 border-[#1C1917]  gap-8 pb-20">
             {header.map((e, index) => (
               <Link
                 href={e.path}
