@@ -4,25 +4,36 @@ const cards = Array.from({ length: 6 });
 
 export default function Loading() {
   return (
-    <div className="min-h-screen min-w-screen bg-flare-gradient pt-35 animate-clock-it">
-      <div className="px-25 flex justify-end w-full">
-        <div className="h-8 w-56 rounded-full bg-white/10 animate-pulse" />
+    <div className="min-h-screen bg-warm-bg pt-28 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      {/* Skeleton Page Header */}
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 border-b border-warm-border pb-8 mb-12">
+        <div className="space-y-3 w-full max-w-md">
+          <div className="h-9 w-2/3 rounded-lg bg-stone-200/70 animate-pulse" />
+          <div className="h-4 w-5/6 rounded-lg bg-stone-200/50 animate-pulse" />
+        </div>
+        <div className="h-5 w-28 rounded-lg bg-stone-200/70 animate-pulse hidden md:block" />
       </div>
 
-      <div className="w-full pt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 lg:px-15 gap-y-10 pb-20">
+      {/* Skeleton Blogs Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {cards.map((_, index) => (
           <div
             key={index}
-            className="bg-blue-900 rounded-lg overflow-hidden relative mx-4 shadow-neon-blue/40"
+            className="bg-warm-card border border-warm-border rounded-2xl overflow-hidden shadow-sm flex flex-col h-full"
           >
-            <div className="w-full h-80 bg-white/10 animate-pulse" />
+            {/* Image Placeholder */}
+            <div className="aspect-[16/10] w-full bg-stone-200/60 animate-pulse" />
 
-            <div className="mx-4 my-4 flex flex-col gap-4">
-              <div className="h-6 w-3/4 rounded-full bg-white/10 animate-pulse" />
-              <div className="h-4 w-1/3 rounded-full bg-white/10 animate-pulse" />
-              <div className="flex justify-between pt-4">
-                <div className="h-4 w-20 rounded-full bg-white/10 animate-pulse" />
-                <div className="h-4 w-24 rounded-full bg-white/10 animate-pulse" />
+            {/* Content Body Placeholder */}
+            <div className="p-6 flex flex-col flex-1 justify-between gap-6">
+              <div className="space-y-3">
+                <div className="h-6 w-11/12 rounded-lg bg-stone-200/70 animate-pulse" />
+                <div className="h-6 w-3/4 rounded-lg bg-stone-200/70 animate-pulse" />
+              </div>
+
+              <div className="pt-4 border-t border-warm-border/60 flex items-center justify-between">
+                <div className="h-4 w-24 rounded bg-stone-200/60 animate-pulse" />
+                <div className="h-4 w-16 rounded bg-stone-200/50 animate-pulse" />
               </div>
             </div>
           </div>

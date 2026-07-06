@@ -20,9 +20,12 @@ export default function RootLayout({
       lang="en"
       className={cn("h-full", "antialiased", "font-sans")}
     >
-      <body className="w-full flex bg-night min-h-screen justify-center text-white items-stretch">
-       <NavBar className=""></NavBar>
-        {children}</body>
+      <body className="w-full flex flex-col bg-warm-bg min-h-screen text-warm-text-primary items-stretch">
+        <NavBar className="" />
+        <main className="w-full flex-1">
+          {children}
+        </main>
+      </body>
     </html>
   );
 }

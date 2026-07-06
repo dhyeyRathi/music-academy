@@ -13,6 +13,8 @@ type BlogDraft = {
 
 const Page = () => {
   const [image, setImage] = useState<File | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [statusMessage, setStatusMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   const [upload, setUpload] = useState<BlogDraft>({
     title: "",
@@ -24,50 +26,56 @@ const Page = () => {
     read_time: "",
   });
 
-  // image functions
-
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
     setImage(file);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsSubmitting(true);
+    setStatusMessage(null);
 
     if (!image) {
-      console.error("Please choose an image before submitting");
+      setStatusMessage({ type: "error", text: "Please select a thumbnail image before submitting." });
+      setIsSubmitting(false);
       return;
     }
 
-    const formData = new FormData();
-    formData.append("image", image);
+    try {
+      const formData = new FormData();
+      formData.append("image", image);
 
-    const response = await fetch("/api/upload-image", {
-      method: "POST",
-      body: formData,
-    });
+      const response = await fetch("/api/upload-image", {
+        method: "POST",
+        body: formData,
+      });
 
-    if (!response.ok) {
-      const error = await response.json().catch(() => null);
-      console.error("Image upload failed", error ?? response.statusText);
-      return;
+      if (!response.ok) {
+        const error = await response.json().catch(() => null);
+        throw new Error(error?.message ?? "Image upload failed");
+      }
+
+      const result = await response.json();
+
+      const payload = {
+        ...upload,
+        excerpt: upload.description,
+        image: result.url,
+        thumbnail: result.url,
+      };
+
+      setUpload((prev) => ({ ...prev, thumbnail: result.url }));
+      await handledb(payload);
+      
+      setStatusMessage({ type: "success", text: "Blog posted successfully!" });
+    } catch (err: any) {
+      console.error(err);
+      setStatusMessage({ type: "error", text: err.message || "Failed to post blog." });
+    } finally {
+      setIsSubmitting(false);
     }
-
-    const result = await response.json();
-
-    const payload = {
-      ...upload,
-      excerpt: upload.description,
-      image: result.url,
-      thumbnail: result.url,
-    };
-
-    setUpload((prev) => ({ ...prev, thumbnail: result.url }));
-    console.log(payload);
-
-    await handledb(payload);
   };
 
   const handledb = async (payload: BlogDraft & { excerpt: string; image: string }) => {
@@ -81,36 +89,51 @@ const Page = () => {
 
     if (!db.ok) {
       const error = await db.json().catch(() => null);
-      console.error("Blog save failed", error ?? db.statusText);
-      return;
+      throw new Error(error?.message ?? "Failed to save blog details to database");
     }
 
     const saved = await db.json();
     console.log("Blog saved", saved);
-  }
+  };
 
   return (
-    <div className="w-full flex justify-center mb-20 items-center">
-      <div className=" w-3/4  mt-40 p-10 gap-10 rounded-xl bg-white/10 backdrop-md flex shadow-[0_0_20px] shadow-neon-blue">
-        <div aria-label="container one" className="w-full h-full text-center">
-          <h1 className="text-4xl pb-10 font-semibold uppercase">
-            Write Your Blog
+    <div className="min-h-screen bg-[#FAF7F2] pt-28 pb-20 px-4 sm:px-6 lg:px-8 flex justify-center items-center">
+      <div className="max-w-4xl w-full bg-white border border-[#E8E2D5] rounded-3xl p-8 sm:p-12 shadow-sm">
+        <div className="text-center max-w-xl mx-auto mb-10">
+          <h1 className="text-3xl font-bold text-[#1C1917] tracking-tight">
+            Publish an Article
           </h1>
+          <p className="text-[#57534E] mt-2">
+            Share your expertise, stories, or announcements with the community.
+          </p>
+        </div>
 
-          <form
-            className="flex flex-col sm:flex-row w-full sm:gap-[5%]"
-            onSubmit={handleSubmit}
+        {statusMessage && (
+          <div
+            className={`p-4 mb-8 rounded-xl text-sm font-medium ${
+              statusMessage.type === "success"
+                ? "bg-green-50 text-green-800 border border-green-200"
+                : "bg-red-50 text-red-800 border border-red-200"
+            }`}
           >
-            <div className="flex flex-col gap-5 sm:gap-8 md:gap-15 w-full h-full">
-              <div className="bg-night px-10 py-2 w-full rounded-lg scale-y-80 sm:scale-y-100 flex items-center justify-between gap-5 focus-within:shadow-[0_0_20px] shadow-neon-blue">
-                <label className="text-xl tracking-[0.05em]" htmlFor="title">
-                  Title:{" "}
+            {statusMessage.text}
+          </div>
+        )}
+
+        <form className="space-y-6 sm:space-y-8" onSubmit={handleSubmit}>
+          {/* Main Details Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+            {/* Left Column */}
+            <div className="space-y-6">
+              <div>
+                <label className="text-xs font-bold uppercase tracking-wider text-[#57534E] mb-2 block" htmlFor="title">
+                  Title
                 </label>
                 <input
                   type="text"
-                  placeholder="Enter title.."
+                  placeholder="The art of writing..."
                   id="title"
-                  className="text-l border-0 h-10 py-2 w-full  focus:outline-none "
+                  className="w-full px-4 py-3 rounded-xl bg-white border border-[#E8E2D5] focus:border-[#B89A6C] focus:ring-1 focus:ring-[#B89A6C] text-[#1C1917] placeholder:text-stone-400 focus:outline-none transition-all"
                   required
                   onChange={(e) =>
                     setUpload((prev) => ({ ...prev, title: e.target.value }))
@@ -118,15 +141,15 @@ const Page = () => {
                 />
               </div>
 
-              <div className="bg-night px-10 py-2 w-full rounded-lg flex items-center scale-y-80 sm:scale-y-100  justify-between gap-5 focus-within:shadow-[0_0_20px] shadow-neon-blue">
-                <label className="text-xl tracking-[0.05em]" htmlFor="excerpt">
-                  Excerpt:{" "}
+              <div>
+                <label className="text-xs font-bold uppercase tracking-wider text-[#57534E] mb-2 block" htmlFor="excerpt">
+                  Excerpt / Subtitle
                 </label>
                 <textarea
-                  placeholder="Enter description.."
+                  placeholder="A short summary of your article..."
                   maxLength={200}
                   id="excerpt"
-                  className="text-l border-0 py-2 w-full h-10 focus:outline-none"
+                  className="w-full px-4 py-3 rounded-xl bg-white border border-[#E8E2D5] focus:border-[#B89A6C] focus:ring-1 focus:ring-[#B89A6C] text-[#1C1917] placeholder:text-stone-400 focus:outline-none transition-all h-24 resize-none"
                   required
                   onChange={(e) =>
                     setUpload((prev) => ({
@@ -137,18 +160,15 @@ const Page = () => {
                 />
               </div>
 
-              <div className="bg-night px-10 py-2 w-full rounded-lg flex justify-between scale-y-80 sm:scale-y-100  gap-5 focus-within:shadow-[0_0_20px] shadow-neon-blue">
-                <label
-                  className="text-xl tracking-[0.05em] pt-2"
-                  htmlFor="excerpt"
-                >
-                  Body:{" "}
+              <div>
+                <label className="text-xs font-bold uppercase tracking-wider text-[#57534E] mb-2 block" htmlFor="body">
+                  Content Body
                 </label>
                 <textarea
                   placeholder="Write your thoughts here..."
                   maxLength={3000}
-                  id="excerpt"
-                  className="text-l border-0 py-2 w-full h-40 sm:h-100 focus:outline-none"
+                  id="body"
+                  className="w-full px-4 py-3 rounded-xl bg-white border border-[#E8E2D5] focus:border-[#B89A6C] focus:ring-1 focus:ring-[#B89A6C] text-[#1C1917] placeholder:text-stone-400 focus:outline-none transition-all h-60 sm:h-72 resize-y"
                   required
                   onChange={(e) =>
                     setUpload((prev) => ({ ...prev, body: e.target.value }))
@@ -157,16 +177,17 @@ const Page = () => {
               </div>
             </div>
 
-            <div className="flex flex-col gap-5 sm:gap-8 md:gap-15 w-full h-full">
-              <div className="bg-night px-10 py-2 w-full rounded-lg flex items-center scale-y-80 sm:scale-y-100  justify-between gap-5 focus-within:shadow-[0_0_20px] shadow-neon-blue">
-                <label className="text-xl tracking-[0.05em]" htmlFor="author">
-                  Author:{" "}
+            {/* Right Column */}
+            <div className="space-y-6">
+              <div>
+                <label className="text-xs font-bold uppercase tracking-wider text-[#57534E] mb-2 block" htmlFor="author">
+                  Author Name
                 </label>
                 <input
                   type="text"
-                  placeholder="Enter author name.."
+                  placeholder="e.g. Jane Doe"
                   id="author"
-                  className="text-l border-0 h-10 py-2 w-full  focus:outline-none"
+                  className="w-full px-4 py-3 rounded-xl bg-white border border-[#E8E2D5] focus:border-[#B89A6C] focus:ring-1 focus:ring-[#B89A6C] text-[#1C1917] placeholder:text-stone-400 focus:outline-none transition-all"
                   required
                   onChange={(e) =>
                     setUpload((prev) => ({ ...prev, author: e.target.value }))
@@ -174,15 +195,15 @@ const Page = () => {
                 />
               </div>
 
-              <div className="bg-night px-10 py-2 w-full rounded-lg flex items-center scale-y-80 sm:scale-y-100  justify-between gap-5 focus-within:shadow-[0_0_20px] shadow-neon-blue">
-                <label className="text-xl tracking-[0.05em]" htmlFor="category">
-                  Category:{" "}
+              <div>
+                <label className="text-xs font-bold uppercase tracking-wider text-[#57534E] mb-2 block" htmlFor="category">
+                  Category
                 </label>
                 <input
                   type="text"
-                  placeholder="Enter category..."
+                  placeholder="e.g. Life, Tutorials, Tech"
                   id="category"
-                  className="text-l border-0 h-10 py-2 w-full  focus:outline-none"
+                  className="w-full px-4 py-3 rounded-xl bg-white border border-[#E8E2D5] focus:border-[#B89A6C] focus:ring-1 focus:ring-[#B89A6C] text-[#1C1917] placeholder:text-stone-400 focus:outline-none transition-all"
                   required
                   onChange={(e) =>
                     setUpload((prev) => ({ ...prev, category: e.target.value }))
@@ -190,18 +211,15 @@ const Page = () => {
                 />
               </div>
 
-              <div className="bg-night px-10 py-2 w-full rounded-lg flex items-center scale-y-80 sm:scale-y-100  justify-between gap-5 focus-within:shadow-[0_0_20px] shadow-neon-blue">
-                <label
-                  className="text-xl tracking-[0.05em]"
-                  htmlFor="read time"
-                >
-                  Approx read time (in minutes):{" "}
+              <div>
+                <label className="text-xs font-bold uppercase tracking-wider text-[#57534E] mb-2 block" htmlFor="read_time">
+                  Approximate Read Time (in minutes)
                 </label>
                 <input
                   type="number"
-                  placeholder="Enter category..."
-                  id="read time"
-                  className="text-l border-0 h-10 py-2 w-full  focus:outline-none"
+                  placeholder="e.g. 5"
+                  id="read_time"
+                  className="w-full px-4 py-3 rounded-xl bg-white border border-[#E8E2D5] focus:border-[#B89A6C] focus:ring-1 focus:ring-[#B89A6C] text-[#1C1917] placeholder:text-stone-400 focus:outline-none transition-all"
                   required
                   onChange={(e) =>
                     setUpload((prev) => ({
@@ -212,59 +230,73 @@ const Page = () => {
                 />
               </div>
 
-              <div className="relative focus-within:shadow-[0_0_20px] shadow-neon-blue">
-                <div className="bg-black px-10  w-full rounded-lg scale-y-80 sm:scale-y-100  flex items-center justify-center p-3  gap-5  relative  hover:shadow-[0_0_20px] shadow-neon-blue">
-                  <label
-                    className="text-xl tracking-[0.05em] w-full h-full flex items-center justify-center gap-5 "
-                    htmlFor="thumbnail"
-                  >
+              <div>
+                <label className="text-xs font-bold uppercase tracking-wider text-[#57534E] mb-2 block">
+                  Thumbnail Image
+                </label>
+                <div className="relative group border-2 border-dashed border-[#E8E2D5] hover:border-[#B89A6C] rounded-2xl p-6 transition-all bg-stone-50/50 flex flex-col items-center justify-center text-center cursor-pointer">
+                  <input
+                    type="file"
+                    accept=".png,.jpg,.jpeg,.webp"
+                    id="thumbnail"
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                    required
+                    onChange={handleImageChange}
+                  />
+                  <div className="text-[#B89A6C] mb-3">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
+                      width="36"
+                      height="36"
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
-                      strokeWidth="2"
+                      strokeWidth="1.5"
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      className="lucide lucide-image-icon lucide-image"
                     >
                       <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
                       <circle cx="9" cy="9" r="2" />
                       <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
                     </svg>
-                    Upload Thumbnail{" "}
-                  </label>
-                  <input
-                    type="file"
-                    accept=".png,.jpg,.jpeg,.webp"
-                    placeholder="Enter author name.."
-                    id="thumbnail"
-                    className="text-l border-0 opacity-0 absolute z-[-2] inset-0 focus:outline-none"
-                    required
-                    onChange={handleImageChange}
-                  />
+                  </div>
+                  <span className="text-sm font-medium text-[#1C1917] block">
+                    {image ? "Change Thumbnail" : "Upload Thumbnail Image"}
+                  </span>
+                  <span className="text-xs text-[#57534E] mt-1 block">
+                    Supports PNG, JPG, JPEG or WEBP
+                  </span>
                 </div>
                 {image && (
-                  <p className="text-red-500 mt-4 absolute bottom-[-30] left-0 right-0">
-                    {image.name}
+                  <p className="text-xs font-medium text-[#B89A6C] mt-2 block text-center">
+                    Selected: {image.name}
                   </p>
                 )}
               </div>
-
-              <div className="bg-pink-900 border-1 hover:bg-neon-pink border-white px-10 py-2 w-full rounded-lg flex items-center scale-y-80 sm:scale-y-100  justify-between gap-5">
-                <input
-                  type="submit"
-                  value="Post Blog"
-                  placeholder="Enter author name.."
-                  id="author"
-                  className="text-l font-semibold border-0 h-10 py-2 text-xl tracking-[0.05em] w-full focus:outline-none"
-                />
-              </div>
             </div>
-          </form>
-        </div>
+          </div>
+
+          {/* Submit Button */}
+          <div className="pt-4 border-t border-[#E8E2D5]">
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full py-4 px-6 bg-[#B89A6C] text-white font-semibold rounded-xl hover:bg-[#9E8155] transition-colors shadow-sm disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+            >
+              {isSubmitting ? (
+                <>
+                  <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                  </svg>
+                  Uploading & Posting...
+                </>
+              ) : (
+                "Publish Article"
+              )}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
