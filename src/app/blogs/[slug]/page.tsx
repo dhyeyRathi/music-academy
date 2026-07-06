@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import BackButton from "@/components/ui/BackButton";
 import { notFound } from "next/navigation";
 
+
 type PageProps = {
   params: Promise<{
     slug: string;
@@ -12,7 +13,7 @@ type PageProps = {
 export default async function Page({ params }: PageProps) {
   const { slug } = await params;
   const supabase = await createClient();
-  
+
   const { data: blog, error } = await supabase
     .from("blogs")
     .select("*")
@@ -44,14 +45,14 @@ export default async function Page({ params }: PageProps) {
           className="absolute inset-0 object-cover h-full w-full"
         />
         {/* Overlay for Text Contrast */}
-        <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/40 to-black/25"></div>
+        <div className="absolute inset-0 bg-linear-to-t from-[#FAF7F2] to-bg-[#FAF7F2]/10"></div>
 
         {/* Header Content Wrapper */}
         <div className="absolute inset-0 flex flex-col justify-between p-6 sm:p-10 md:p-16 lg:p-24 max-w-7xl mx-auto w-full z-10">
           {/* Top Row: Back Button */}
           <div>
             <BackButton>
-              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all duration-300">
+              <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-black/80 hover:bg-black/60 text-white backdrop-blur-md transition-all duration-300">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="20"
@@ -71,19 +72,19 @@ export default async function Page({ params }: PageProps) {
           </div>
 
           {/* Bottom Row: Metadata & Title */}
-          <div className="max-w-4xl text-white">
-            <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-[#B89A6C] text-white mb-4">
+          <div className="max-w-4xl text-stone-900  ">
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-[#B89A6C] mb-4">
               {blog?.category}
             </span>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4 leading-tight">
               {blog?.title}
             </h1>
-            <p className="text-lg sm:text-xl text-stone-200/90 font-light mb-6 max-w-3xl leading-relaxed">
+            <p className="text-lg sm:text-xl text-gray-700 font-light mb-6 max-w-3xl leading-relaxed">
               {blog?.excerpt}
             </p>
-            
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs sm:text-sm text-stone-300 font-light">
-              <span>By <strong className="font-semibold text-white">{blog?.author}</strong></span>
+
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs sm:text-sm text-stone-900 font-light">
+              <span>By <strong className="font-semibold ">{blog?.author}</strong></span>
               <span className="text-stone-500">•</span>
               <span>{blog?.read_time}</span>
               <span className="text-stone-500">•</span>
@@ -106,7 +107,7 @@ export default async function Page({ params }: PageProps) {
             {blog.author} writes...
           </h2>
         </div>
-        
+
         <div className="prose prose-stone max-w-none">
           <p className="text-lg sm:text-xl text-[#57534E] leading-relaxed font-light whitespace-pre-line tracking-wide">
             {blogBody.body}
